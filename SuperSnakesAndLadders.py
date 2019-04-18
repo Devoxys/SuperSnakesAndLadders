@@ -16,8 +16,30 @@ BOARD_WHITE = (255, 255, 255)
 
 def find_center(n):
     """Finds Center of tile n"""
-    tens = n//10**1 % 10
-    ones = n//10**0 % 10
+    if n != 100:
+        tens = n//10**1 % 10
+        ones = n//10**0 % 10
+    else:
+        tens = 10
+        ones = 0
+    cy = 90 + tens*60
+    cx = 90 + ones*60
+    return cx, cy
+
+
+def generate_card_spots(screen):
+    n = random.randint(1, 25)
+    spots = random.sample(range(1, 100), n)
+    for s in spots:
+        cx, cy = find_center(s)
+        cfont = pygame.font.Font(None, 24)
+        ctext1 = cfont.render("C", 1, (135, 232, 123))
+        ctext1pos = ctext1.get_rect()
+        ctext1pos.centerx = cx
+        ctext1pos.centery = cy
+        screen.blit(ctext1, ctext1pos)
+
+
 
 
 def draw_board(screen):
@@ -60,6 +82,7 @@ def draw_board(screen):
                 tntext2pos.top = top + 5
                 screen.blit(tntext2, tntext2pos)
                 screen.blit(tntext1, tntext1pos)
+        generate_card_spots(screen)
 
 
 
