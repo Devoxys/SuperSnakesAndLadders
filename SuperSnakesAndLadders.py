@@ -12,7 +12,7 @@ BOARD_WHITE = (255, 255, 255)
 BOARD_YELLOW = (255, 255, 77)
 BOARD_GREEN = (77, 255, 77)
 BOARD_CYAN = (77, 255, 255)
-BOARD_BLUE  = (77, 77, 255)
+BOARD_BLUE = (77, 77, 255)
 BOARD_BLACK = (20, 20, 20)
 COUNTER = 3
 
@@ -30,9 +30,6 @@ def find_center(n):
     return cx, cy
 
 
-
-
-
 def identify_square(pos):
     x = pos[0]
     y = pos[1]
@@ -40,7 +37,12 @@ def identify_square(pos):
         return -1
     ones = 10 - x // 60
     tens = 10 - y // 60
-    return tens*10 + ones + 1
+    if tens % 2 == 1:
+        print('a', tens*10 + ones + 1)
+        return tens*10 + ones + 1
+    else:
+        print('b', tens*10 + (10 - ones))
+        return tens*10 + (10 - ones)
 
 
 def draw_ladder(screen, start=-1, end=-1):
@@ -120,14 +122,13 @@ def draw_board(screen, counter, snakelist, ladderlist, cardlist):
                 screen.blit(tntext2, tntext2pos)
                 screen.blit(tntext1, tntext1pos)
 
-
     cladderfont = pygame.font.SysFont('georgiattf', 30)
     claddertext = cladderfont.render("Configure Ladders", 1, BOARD_BLACK)
     claddertextpos = claddertext.get_rect()
     claddertextpos.right = screen.get_rect().right - 30
     claddertextpos.top = screen.get_rect().top + 120
     cladderrect = Rect(claddertextpos.left - 10, claddertextpos.top - 10,
-                   claddertextpos.width + 20, claddertextpos.height + 20)
+                       claddertextpos.width + 20, claddertextpos.height + 20)
     pygame.draw.rect(screen, BOARD_YELLOW, cladderrect, 0)
     screen.blit(claddertext, claddertextpos)
 
@@ -137,7 +138,7 @@ def draw_board(screen, counter, snakelist, ladderlist, cardlist):
     csnaketextpos.left = claddertextpos.left
     csnaketextpos.top = claddertextpos.bottom + 40
     csnakerect = Rect(claddertextpos.left - 10, csnaketextpos.top - 10,
-                   claddertextpos.width + 20, csnaketextpos.height + 20)
+                      claddertextpos.width + 20, csnaketextpos.height + 20)
     pygame.draw.rect(screen, BOARD_GREEN, csnakerect, 0)
     screen.blit(csnaketext, csnaketextpos)
 
@@ -147,7 +148,7 @@ def draw_board(screen, counter, snakelist, ladderlist, cardlist):
     confirmtextpos.left = claddertextpos.left
     confirmtextpos.top = csnaketextpos.bottom + 40
     confirmrect = Rect(claddertextpos.left - 10, confirmtextpos.top - 10,
-                   claddertextpos.width + 20, confirmtextpos.height + 20)
+                       claddertextpos.width + 20, confirmtextpos.height + 20)
     pygame.draw.rect(screen, BOARD_CYAN, confirmrect, 0)
     screen.blit(confirmtext, confirmtextpos)
 
@@ -157,7 +158,7 @@ def draw_board(screen, counter, snakelist, ladderlist, cardlist):
     endturntextpos.left = claddertextpos.left
     endturntextpos.top = confirmtextpos.bottom + 40
     endturnrect = Rect(claddertextpos.left - 10, endturntextpos.top - 10,
-                   claddertextpos.width + 20, endturntextpos.height + 20)
+                       claddertextpos.width + 20, endturntextpos.height + 20)
     pygame.draw.rect(screen, BOARD_RED, endturnrect, 0)
     screen.blit(endturntext, endturntextpos)
 
@@ -175,8 +176,6 @@ def draw_board(screen, counter, snakelist, ladderlist, cardlist):
     titletextpos.centerx = screen.get_rect().centerx
     screen.blit(titletext, titletextpos)
 
-
-
     for s in snakelist:
         draw_snake(screen, s[0], s[1])
     for l in ladderlist:
@@ -190,9 +189,7 @@ def draw_board(screen, counter, snakelist, ladderlist, cardlist):
         ctextpos.centery = cy
         screen.blit(ctext, ctextpos)
 
-
     return cladderrect, csnakerect, confirmrect, endturnrect
-
 
 
 def main():
@@ -207,9 +204,6 @@ def main():
     startflag = True
 
     counter = 0
-    snakes = []
-    ladders = []
-    cardspots = []
     snakes, ladders, cardspots = generator(screen, random.randint(0, 5), random.randint(0, 5), random.randint(1, 25))
 
     mode = "normal"
@@ -239,9 +233,11 @@ def main():
                         counter -= 1
                         if counter <= 0:
                             counter = COUNTER
-                            snakes, ladders, cardspots = generator(screen, random.randint(0, 5), random.randint(0, 5), random.randint(1, 25))
+                            snakes, ladders, cardspots = generator(screen, random.randint(0, 5),
+                                                                   random.randint(0, 5), random.randint(1, 25))
                         screen.blit(background, (0, 0))
-                        cladderrect, csnakerect, confirmrect, endturnrect = draw_board(screen, counter, snakes, ladders, cardspots)
+                        cladderrect, csnakerect, confirmrect, endturnrect = draw_board(screen, counter,
+                                                                                       snakes, ladders, cardspots)
                         pygame.display.flip()
                     if cladderrect.collidepoint(event.pos):
                         mode = 'ladder'
@@ -250,7 +246,8 @@ def main():
                         helptextpos = helptext.get_rect()
                         helptextpos.bottom = screen.get_rect().bottom
                         screen.blit(background, (0, 0))
-                        cladderrect, csnakerect, confirmrect, endturnrect = draw_board(screen, counter, snakes, ladders, cardspots)
+                        cladderrect, csnakerect, confirmrect, endturnrect = draw_board(screen, counter, snakes,
+                                                                                       ladders, cardspots)
                         screen.blit(helptext, helptextpos)
                         pygame.display.flip()
                     if csnakerect.collidepoint(event.pos):
@@ -260,7 +257,8 @@ def main():
                         helptextpos = helptext.get_rect()
                         helptextpos.bottom = screen.get_rect().bottom
                         screen.blit(background, (0, 0))
-                        cladderrect, csnakerect, confirmrect, endturnrect = draw_board(screen, counter, snakes, ladders, cardspots)
+                        cladderrect, csnakerect, confirmrect, endturnrect = draw_board(screen, counter, snakes,
+                                                                                       ladders, cardspots)
                         screen.blit(helptext, helptextpos)
                         pygame.display.flip()
                     print(mode)
@@ -287,15 +285,15 @@ def main():
                             helptextpos = helptext.get_rect()
                             helptextpos.bottom = screen.get_rect().bottom
                             screen.blit(background, (0, 0))
-                            cladderrect, csnakerect, confirmrect, endturnrect = draw_board(screen, counter, snakes, ladders, cardspots)
+                            cladderrect, csnakerect, confirmrect, endturnrect = draw_board(screen, counter, snakes,
+                                                                                           ladders, cardspots)
                             screen.blit(helptext, helptextpos)
                             pygame.display.flip()
                             edit_mode += 1
                         elif edit_mode == 2:
                             edit_info.append(identify_square(event.pos))
-                            id = edit_info
                             if mode == 'snake':
-                                if -1 in id:
+                                if -1 in edit_info:
                                     edit_info = []
                                     helpfont = pygame.font.SysFont('georgiattf', 24)
                                     helptext = helpfont.render("Click on an end of new {0}".format(mode), 1,
@@ -309,19 +307,21 @@ def main():
                                     screen.blit(helptext, helptextpos)
                                     pygame.display.flip()
                                     edit_mode += 1
-                                elif sorted(id) not in snakes:
+                                elif sorted(edit_info) not in snakes:
                                     helpfont = pygame.font.SysFont('georgiattf', 24)
                                     helptext = helpfont.render("Not found, try again".format(mode), 1,
                                                                BOARD_BLACK)
                                     helptextpos = helptext.get_rect()
                                     helptextpos.bottom = screen.get_rect().bottom
                                     screen.blit(background, (0, 0))
-                                    cladderrect, csnakerect, confirmrect, endturnrect = draw_board(screen, counter, snakes, ladders, cardspots)
+                                    cladderrect, csnakerect, confirmrect, endturnrect = draw_board(screen, counter,
+                                                                                                   snakes, ladders,
+                                                                                                   cardspots)
                                     screen.blit(helptext, helptextpos)
                                     pygame.display.flip()
                                     edit_mode = 1
                                 else:
-                                    snakes.remove(sorted(id))
+                                    snakes.remove(sorted(edit_info))
                                     edit_info = []
                                     helpfont = pygame.font.SysFont('georgiattf', 24)
                                     helptext = helpfont.render("Click on an end of new {0}".format(mode), 1,
@@ -329,12 +329,14 @@ def main():
                                     helptextpos = helptext.get_rect()
                                     helptextpos.bottom = screen.get_rect().bottom
                                     screen.blit(background, (0, 0))
-                                    cladderrect, csnakerect, confirmrect, endturnrect = draw_board(screen, counter, snakes, ladders, cardspots)
+                                    cladderrect, csnakerect, confirmrect, endturnrect = draw_board(screen, counter,
+                                                                                                   snakes, ladders,
+                                                                                                   cardspots)
                                     screen.blit(helptext, helptextpos)
                                     pygame.display.flip()
                                     edit_mode += 1
                             elif mode == 'ladder':
-                                if -1 in id:
+                                if -1 in edit_info:
                                     edit_info = []
                                     helpfont = pygame.font.SysFont('georgiattf', 24)
                                     helptext = helpfont.render("Click on an end of new {0}".format(mode), 1,
@@ -348,19 +350,21 @@ def main():
                                     screen.blit(helptext, helptextpos)
                                     pygame.display.flip()
                                     edit_mode += 1
-                                elif sorted(id) not in ladders:
+                                elif sorted(edit_info) not in ladders:
                                     helpfont = pygame.font.SysFont('georgiattf', 24)
                                     helptext = helpfont.render("Not found, try again".format(mode), 1,
                                                                BOARD_BLACK)
                                     helptextpos = helptext.get_rect()
                                     helptextpos.bottom = screen.get_rect().bottom
                                     screen.blit(background, (0, 0))
-                                    cladderrect, csnakerect, confirmrect, endturnrect = draw_board(screen, counter, snakes, ladders, cardspots)
+                                    cladderrect, csnakerect, confirmrect, endturnrect = draw_board(screen, counter,
+                                                                                                   snakes, ladders,
+                                                                                                   cardspots)
                                     screen.blit(helptext, helptextpos)
                                     pygame.display.flip()
                                     edit_mode = 1
                                 else:
-                                    ladders.remove(sorted(id))
+                                    ladders.remove(sorted(edit_info))
                                     edit_info = []
                                     helpfont = pygame.font.SysFont('georgiattf', 24)
                                     helptext = helpfont.render("Click on an end of new {0}".format(mode), 1,
@@ -368,7 +372,9 @@ def main():
                                     helptextpos = helptext.get_rect()
                                     helptextpos.bottom = screen.get_rect().bottom
                                     screen.blit(background, (0, 0))
-                                    cladderrect, csnakerect, confirmrect, endturnrect = draw_board(screen, counter, snakes, ladders, cardspots)
+                                    cladderrect, csnakerect, confirmrect, endturnrect = draw_board(screen, counter,
+                                                                                                   snakes, ladders,
+                                                                                                   cardspots)
                                     screen.blit(helptext, helptextpos)
                                     pygame.display.flip()
                                     edit_mode += 1
@@ -381,7 +387,9 @@ def main():
                                     helptextpos = helptext.get_rect()
                                     helptextpos.bottom = screen.get_rect().bottom
                                     screen.blit(background, (0, 0))
-                                    cladderrect, csnakerect, confirmrect, endturnrect = draw_board(screen, counter, snakes, ladders, cardspots)
+                                    cladderrect, csnakerect, confirmrect, endturnrect = draw_board(screen, counter,
+                                                                                                   snakes, ladders,
+                                                                                                   cardspots)
                                     screen.blit(helptext, helptextpos)
                                     pygame.display.flip()
                                 else:
@@ -392,7 +400,9 @@ def main():
                                     helptextpos = helptext.get_rect()
                                     helptextpos.bottom = screen.get_rect().bottom
                                     screen.blit(background, (0, 0))
-                                    cladderrect, csnakerect, confirmrect, endturnrect = draw_board(screen, counter, snakes, ladders, cardspots)
+                                    cladderrect, csnakerect, confirmrect, endturnrect = draw_board(screen, counter,
+                                                                                                   snakes,
+                                                                                                   ladders, cardspots)
                                     screen.blit(helptext, helptextpos)
                                     pygame.display.flip()
                                     edit_mode += 1
@@ -403,7 +413,9 @@ def main():
                                     helptextpos = helptext.get_rect()
                                     helptextpos.bottom = screen.get_rect().bottom
                                     screen.blit(background, (0, 0))
-                                    cladderrect, csnakerect, confirmrect, endturnrect = draw_board(screen, counter, snakes, ladders, cardspots)
+                                    cladderrect, csnakerect, confirmrect, endturnrect = draw_board(screen, counter,
+                                                                                                   snakes,
+                                                                                                   ladders, cardspots)
                                     screen.blit(helptext, helptextpos)
                                     pygame.display.flip()
                                 else:
@@ -414,7 +426,9 @@ def main():
                                     helptextpos = helptext.get_rect()
                                     helptextpos.bottom = screen.get_rect().bottom
                                     screen.blit(background, (0, 0))
-                                    cladderrect, csnakerect, confirmrect, endturnrect = draw_board(screen, counter, snakes, ladders, cardspots)
+                                    cladderrect, csnakerect, confirmrect, endturnrect = draw_board(screen, counter,
+                                                                                                   snakes, ladders,
+                                                                                                   cardspots)
                                     screen.blit(helptext, helptextpos)
                                     pygame.display.flip()
                                     edit_mode += 1
@@ -441,7 +455,9 @@ def main():
                                     helptextpos = helptext.get_rect()
                                     helptextpos.bottom = screen.get_rect().bottom
                                     screen.blit(background, (0, 0))
-                                    cladderrect, csnakerect, confirmrect, endturnrect = draw_board(screen, counter, snakes, ladders, cardspots)
+                                    cladderrect, csnakerect, confirmrect, endturnrect = draw_board(screen, counter,
+                                                                                                   snakes, ladders,
+                                                                                                   cardspots)
                                     screen.blit(helptext, helptextpos)
                                     pygame.display.flip()
                                 else:
@@ -468,7 +484,9 @@ def main():
                                     helptextpos = helptext.get_rect()
                                     helptextpos.bottom = screen.get_rect().bottom
                                     screen.blit(background, (0, 0))
-                                    cladderrect, csnakerect, confirmrect, endturnrect = draw_board(screen, counter, snakes, ladders, cardspots)
+                                    cladderrect, csnakerect, confirmrect, endturnrect = draw_board(screen, counter,
+                                                                                                   snakes, ladders,
+                                                                                                   cardspots)
                                     screen.blit(helptext, helptextpos)
                                     pygame.display.flip()
                                 else:
@@ -487,8 +505,6 @@ def main():
                                                                                                    cardspots)
                                     screen.blit(helptext, helptextpos)
                                     pygame.display.flip()
-
-
 
 
 if __name__ == '__main__':
