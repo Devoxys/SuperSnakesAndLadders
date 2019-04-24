@@ -228,6 +228,7 @@ def main():
                 print(snakes)
                 print(ladders)
                 print(cardspots)
+                print(identify_square(event.pos))
                 if mode == "normal":
                     if endturnrect.collidepoint(event.pos):
                         counter -= 1
@@ -505,6 +506,22 @@ def main():
                                                                                                    cardspots)
                                     screen.blit(helptext, helptextpos)
                                     pygame.display.flip()
+            if event.type == KEYDOWN:
+                if event.key == K_s:
+                    screen.blit(background, (0, 0))
+                    snakes = []
+                    cladderrect, csnakerect, confirmrect, endturnrect = draw_board(screen, counter, snakes, ladders,
+                                                                                   cardspots)
+                    pygame.display.flip()
+                if event.key == K_l:
+                    screen.blit(background, (0, 0))
+                    ladders = []
+                    cladderrect, csnakerect, confirmrect, endturnrect = draw_board(screen, counter, snakes, ladders,
+                                                                                   cardspots)
+                    pygame.display.flip()
+
+
+
 
 
 if __name__ == '__main__':
