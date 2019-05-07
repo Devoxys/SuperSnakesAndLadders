@@ -204,7 +204,7 @@ def main():
     startflag = True
 
     counter = 0
-    snakes, ladders, cardspots = generator(screen, random.randint(4, 8), random.randint(4, 8), random.randint(20, 70))
+    snakes, ladders, cardspots = generator(screen, random.randint(4, 8), random.randint(4, 8), random.randint(30, 70))
 
     mode = "normal"
     edit_mode = 1
@@ -235,7 +235,7 @@ def main():
                         if counter <= 0:
                             counter = COUNTER
                             snakes, ladders, cardspots = generator(screen, random.randint(4, 12),
-                                                                   random.randint(4, 12), random.randint(10, 40))
+                                                                   random.randint(4, 12), random.randint(30, 70))
                         screen.blit(background, (0, 0))
                         cladderrect, csnakerect, confirmrect, endturnrect = draw_board(screen, counter,
                                                                                        snakes, ladders, cardspots)
