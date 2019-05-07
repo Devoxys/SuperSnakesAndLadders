@@ -204,7 +204,7 @@ def main():
     startflag = True
 
     counter = 0
-    snakes, ladders, cardspots = generator(screen, random.randint(0, 5), random.randint(0, 5), random.randint(1, 25))
+    snakes, ladders, cardspots = generator(screen, random.randint(4, 8), random.randint(4, 8), random.randint(20, 70))
 
     mode = "normal"
     edit_mode = 1
@@ -234,8 +234,8 @@ def main():
                         counter -= 1
                         if counter <= 0:
                             counter = COUNTER
-                            snakes, ladders, cardspots = generator(screen, random.randint(0, 5),
-                                                                   random.randint(0, 5), random.randint(1, 25))
+                            snakes, ladders, cardspots = generator(screen, random.randint(4, 12),
+                                                                   random.randint(4, 12), random.randint(10, 40))
                         screen.blit(background, (0, 0))
                         cladderrect, csnakerect, confirmrect, endturnrect = draw_board(screen, counter,
                                                                                        snakes, ladders, cardspots)
@@ -513,6 +513,7 @@ def main():
                     cladderrect, csnakerect, confirmrect, endturnrect = draw_board(screen, counter, snakes, ladders,
                                                                                    cardspots)
                     pygame.display.flip()
+                    pygame.display.flip()
                 if event.key == K_l:
                     screen.blit(background, (0, 0))
                     ladders = []
@@ -520,8 +521,12 @@ def main():
                                                                                    cardspots)
                     pygame.display.flip()
 
-
-
+                if event.key == K_f:
+                    screen.blit(background, (0, 0))
+                    snakes, ladders = ladders, snakes
+                    cladderrect, csnakerect, confirmrect, endturnrect = draw_board(screen, counter, snakes, ladders,
+                                                                                   cardspots)
+                    pygame.display.flip()
 
 
 if __name__ == '__main__':
